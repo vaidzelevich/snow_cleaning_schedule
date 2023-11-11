@@ -64,13 +64,11 @@ def draw_box(
         **kwargs
     )
     ax.text(x + w / 2, y + h / 2, label,
-            ha='center', va='center', fontsize=8)
+            ha='center', va='center', fontsize=8, c='white')
 
 
 num_hours = 7
 num_time_slots = 2 * num_hours
-
-plt.style.use('dark_background')
 
 if right.button('Schedule'):
     st.divider()
