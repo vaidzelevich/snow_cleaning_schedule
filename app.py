@@ -18,7 +18,7 @@ left, right = st.columns(2)
 
 num_zones = 6
 priorities = [rnd.randint(1, 10) for _ in range(num_zones)]
-column_names = [*(f'# {name}' for name in resource_names), 'duration']
+column_names = [*(f'# {name}' for name in resource_names), 'x 30min']
 tables = [pd.DataFrame([], columns=column_names)] * num_zones
 zone_names = [f'Zone {i + 1}' for i in range(num_zones)]
 with left:
@@ -34,9 +34,6 @@ with right:
     for i, name in enumerate(resource_names):
         capacities[i] = st.number_input(f'Total number of {name}:', min_value=0,
                                         value=capacities[i])
-
-st.divider()
-
 
 def draw_box(
     ax: Axes,
@@ -62,13 +59,14 @@ num_time_slots = 2 * num_hours
 plt.style.use('dark_background')
 
 if right.button('Schedule'):
+    st.divider()
     zones: list[solver.Zone] = []
     for i, table in enumerate(tables):
         modes: list[solver.Mode] = []
         for _, row in table.iterrows():
-            if row['duration'] is None:
+            if row['x 30min'] is None:
                 continue
-            duration = int(row['duration'])
+            duration = int(row['x 30min'])
             demands = [int(demand) for demand in row[:-1]]
             modes.append(solver.Mode(duration=duration, demands=demands))
         zones.append(solver.Zone(modes=modes, priority=priorities[i]))
@@ -106,5 +104,7 @@ if right.button('Schedule'):
         st.pyplot(ax.figure)
 
     with st.expander('Workload', expanded=False):
+        index = [labels[i - 1] + ' - ' + labels[i]
+                 for i in range(1, len(labels))]
         st.bar_chart(pd.DataFrame(
-            workload, index=labels[:-1], columns=resource_names))
+            workload, index=index, columns=resource_names))
