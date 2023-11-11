@@ -19,7 +19,21 @@ left, right = st.columns(2)
 num_zones = 6
 priorities = [rnd.randint(1, 10) for _ in range(num_zones)]
 column_names = [*(f'# {name}' for name in resource_names), 'x 30min']
-tables = [pd.DataFrame([], columns=column_names)] * num_zones
+pool = (
+    pd.DataFrame([
+        [5, 0, 4],
+        [2, 1, 2]
+    ], columns=column_names),
+    pd.DataFrame([
+        [3, 0, 3],
+        [1, 1, 2]
+    ], columns=column_names),
+    pd.DataFrame([
+        [4, 0, 4],
+        [2, 1, 2]
+    ], columns=column_names)
+)
+tables = [pool[i % len(pool)] for i in range(num_zones)]
 zone_names = [f'Zone {i + 1}' for i in range(num_zones)]
 with left:
     tabs = left.tabs(zone_names)
