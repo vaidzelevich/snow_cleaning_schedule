@@ -78,10 +78,11 @@ if right.button('Schedule'):
     for i, table in enumerate(tables):
         modes: list[solver.Mode] = []
         for _, row in table.iterrows():
-            if row['x 30min'] is None:
+            try:
+                duration = int(row['x 30min'])
+                demands = [int(demand) for demand in row[:-1]]
+            except:
                 continue
-            duration = int(row['x 30min'])
-            demands = [int(demand) for demand in row[:-1]]
             modes.append(solver.Mode(duration=duration, demands=demands))
         zones.append(solver.Zone(modes=modes, priority=priorities[i]))
     items = solver.make_schedule(zones, num_time_slots, capacities)
