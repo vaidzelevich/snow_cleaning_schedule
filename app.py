@@ -38,16 +38,18 @@ zone_names = [f'Zone {i + 1}' for i in range(num_zones)]
 with left:
     tabs = left.tabs(zone_names)
     for i, tab in enumerate(tabs):
+        priorities[i] = tab.number_input(
+            f'Priority:', min_value=0, value=priorities[i], key=f'{i}:priority')
         tab.text('Modes:')
         tables[i] = tab.data_editor(
             tables[i], num_rows='dynamic', key=f'{i}:tables')
-        priorities[i] = tab.number_input(
-            f'Priority:', min_value=0, value=priorities[i], key=f'{i}:priority')
+
 
 with right:
     for i, name in enumerate(resource_names):
         capacities[i] = st.number_input(f'Total number of {name}:', min_value=0,
                                         value=capacities[i])
+
 
 def draw_box(
     ax: Axes,
